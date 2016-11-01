@@ -1,21 +1,39 @@
 import json
+import geopy
+import geopy.distance
 
 
 def load_data(filepath):
-    pass
+    with open(filepath, encoding="utf-8") as json_file:
+        data = json.loads(json_file.read())
+    return data
 
 
 def get_biggest_bar(data):
-    pass
+    bar = max(data, key=lambda x: x["Cells"]["SeatsCount"])
+    return bar["Cells"]["Name"]
 
 
 def get_smallest_bar(data):
-    pass
+    bar = min(data, key=lambda x: x["Cells"]["SeatsCount"])
+    return bar["Cells"]["Name"]
 
 
 def get_closest_bar(data, longitude, latitude):
-    pass
+    coordinates_list = [(bar["Cells"]["Name"],
+            geopy.Point(bar["Cells"]["geoData"]["coordinates"][0],
+                bar["Cells"]["geoData"]["coordinates"][1])) for bar in data]
+    coordinate = geopy.Point(longitude, latitude)
+    distances = [(bar[0], geopy.distance.distance(bar[1], 
+            coordinate).km) for bar in coordinates_list]
+    return min(distances, key=lambda x: x[1])[0]
 
 
 if __name__ == '__main__':
-    pass
+    data = load_data("Бары.json")
+    print("Самый большой бар - {}".format(get_biggest_bar(data)))
+    print("Самый маленький бар - {}".format(get_smallest_bar(data)))
+    longitude = input("Input your longitude:")
+    latitude = input("Input your latitude:")
+    print("Ближайший к указанным координатам бар - \
+{}".format(get_closest_bar(data, longitude, latitude)))
