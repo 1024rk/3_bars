@@ -34,8 +34,9 @@ def get_closest_bar(data, longitude, latitude):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("json_file")
+    namespace = parser.parse_args()
     try:
-        data = load_data(argparse.json_file)
+        data = load_data(namespace.json_file)
     except AttributeError:
         print("Пожалуйста, запустите программу, передав как аргумент json-файл со списком баров")
         sys.exit()
