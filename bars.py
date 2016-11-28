@@ -1,4 +1,6 @@
+import sys
 import json
+import argparse
 import geopy
 import geopy.distance
 
@@ -30,7 +32,13 @@ def get_closest_bar(data, longitude, latitude):
 
 
 if __name__ == '__main__':
-    data = load_data("Бары.json")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("json_file")
+    try:
+        data = load_data(argparse.json_file)
+    except AttributeError:
+        print("Пожалуйста, запустите программу, передав как аргумент json-файл со списком баров")
+        sys.exit()
     print("Самый большой бар - {}".format(get_biggest_bar(data)))
     print("Самый маленький бар - {}".format(get_smallest_bar(data)))
     longitude = input("Input your longitude:")
